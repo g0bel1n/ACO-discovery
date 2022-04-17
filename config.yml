@@ -4,3 +4,4 @@ beta : 1.5
 alpha : 0.8
 NB_NODES: 20
 MAX_GRID_SIZE: 100
+evaporation_rate : 0.6
