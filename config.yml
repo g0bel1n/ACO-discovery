@@ -1,0 +1,6 @@
+BATCH_SIZE : 20
+MAX_ITER : 200
+beta : 1.5
+alpha : 0.8
+NB_NODES: 20
+MAX_GRID_SIZE: 100
