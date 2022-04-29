@@ -17,15 +17,13 @@ with open("config.yml") as config_file:
 
 def thread_task(
     nb_nodes: int,
-    phero_matrix: np.ndarray,
-    distances: np.ndarray,
     initial_node: int,
     listOfSolutions: list,
-    beta: float,
-    alpha: float,
+    mat_probs: np.ndarray,
+    distances: np.ndarray,
 ):
-    ant = Ant(initial_node=initial_node, nb_nodes=nb_nodes, alpha=alpha, beta=beta)
-    ant.simulate(phero_matrix, distances)
+    ant = Ant(initial_node=initial_node, nb_nodes=nb_nodes)
+    ant.simulate(mat_probs=mat_probs)
     listOfSolutions.append(
         [
             ant.visited_nodes,
@@ -58,7 +56,7 @@ class AntSystem:
         self.NB_NODES = NB_NODES
         self.MAX_GRID_SIZE = MAX_GRID_SIZE
         self.evaporation_rate = evaporation_rate
-        self.phero_matrix = np.zeros((NB_NODES, NB_NODES))
+        self.phero_matrix = np.ones((NB_NODES, NB_NODES))
         self.nodes_position = np.array(
             [
                 [randint(0, MAX_GRID_SIZE), randint(0, MAX_GRID_SIZE)]
@@ -103,7 +101,7 @@ class AntSystem:
 
         plt.show()
 
-    def iteration(self):
+    def iteration(self, mat_probs: np.ndarray):
         initial_node = 1
         threads = [Any] * self.BATCH_SIZE
         for i in range(self.BATCH_SIZE):
@@ -111,12 +109,10 @@ class AntSystem:
                 target=thread_task,
                 args=(
                     self.NB_NODES,
-                    self.phero_matrix,
-                    self.distances,
                     initial_node,
                     self.listOfSolutions,
-                    self.beta,
-                    self.alpha,
+                    mat_probs,
+                    self.distances,
                 ),
             )
             threads[i].start()
@@ -126,7 +122,9 @@ class AntSystem:
 
     def simulate(self):
         for i in tqdm(range(self.MAX_ITER)):
-            self.iteration()
+            m = (self.phero_matrix**self.alpha) * (self.distances ** (-self.beta))
+            mat_probs = np.divide(m, m.sum(axis=1)[:, None])
+            self.iteration(mat_probs=mat_probs)
             self.phero_matrix *= 1 - self.evaporation_rate
             new_solutions = self.listOfSolutions[
                 i * self.BATCH_SIZE : (i + 1) * self.BATCH_SIZE

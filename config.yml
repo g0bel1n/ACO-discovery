@@ -1,5 +1,5 @@
 BATCH_SIZE : 20
-MAX_ITER : 200
+MAX_ITER : 20000
 beta : 1.5
 alpha : 0.8
 NB_NODES: 20
