@@ -133,7 +133,9 @@ class AntSystem:
                 new_solutions, range(self.NB_NODES - 1)
             ):
                 self.phero_matrix[solution[i], solution[i + 1]] += 1 / cost
-                self.phero_matrix[solution[i + 1], solution[i]] += 1 / cost
+                self.phero_matrix[solution[i + 1], solution[i]] = self.phero_matrix[
+                    solution[i], solution[i + 1]
+                ]
 
         best_ind = np.argmin([score for _, score in self.listOfSolutions])
         self.best_path = self.listOfSolutions[best_ind][0]

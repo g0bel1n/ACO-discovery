@@ -18,12 +18,6 @@ class Ant:
         self.nb_nodes = nb_nodes
 
     def p(self, i, j, mat_probs) -> float:
-        # m = (phero_matrix**self.alpha) * (distances ** (-self.beta))
-        # return (
-        #     1 / distances[i, j]
-        #     if phero_matrix.any()
-        #     else m[i, j] / sum(m[i, self.nodes_to_visit])
-        # )
         return mat_probs[i, j]
 
     def simulate(self, mat_probs: np.ndarray) -> bool:
